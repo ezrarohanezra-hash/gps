@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geo-Collector</title>
+    <!-- Tailwind CSS untuk Styling yang cepat dan responsif -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Kustom scrollbar untuk estetika */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-100 text-slate-800 min-h-screen pb-10">
+
+    <!-- Container Utama -->
+    <div class="max-w-md mx-auto sm:mt-8">
+
+        <!-- Header -->
+        <header class="bg-blue-600 text-white p-5 sm:rounded-t-2xl shadow-lg text-center relative overflow-hidden">
+            <div class="relative z-10">
+                <h1 class="text-2xl font-bold flex justify-center items-center gap-2">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z">
+                        </path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                    Geo-Collector
+                </h1>
+                <p class="text-blue-100 text-sm mt-1">Aplikasi Perekam Koordinat GPS</p>
+            </div>
+            <!-- Dekorasi background header -->
+            <div class="absolute top-0 right-0 -mr-8 -mt-8 w-32 h-32 rounded-full bg-white opacity-10"></div>
+            <div class="absolute bottom-0 left-0 -ml-8 -mb-8 w-24 h-24 rounded-full bg-white opacity-10"></div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="bg-white p-5 sm:rounded-b-2xl shadow-lg space-y-6">
+
+            <!-- Section 1: Pengambilan Geolocation -->
+            <div class="space-y-4">
+                <button id="btn-get-location"
+                    class="w-full bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 font-semibold py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition-colors duration-200 active:scale-[0.98]">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9">
+                        </path>
+                    </svg>
+                    <span id="btn-get-location-text">Ambil Koordinat Saat Ini</span>
+                </button>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label
+                            class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Latitude</label>
+                        <input type="text" id="lat-display" readonly
+                            class="w-full bg-slate-50 border border-slate-200 rounded-lg py-2.5 px-3 text-sm text-slate-700 font-mono outline-none"
+                            placeholder="Belum ada data">
+                    </div>
+                    <div>
+                        <label
+                            class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Longitude</label>
+                        <input type="text" id="lng-display" readonly
+                            class="w-full bg-slate-50 border border-slate-200 rounded-lg py-2.5 px-3 text-sm text-slate-700 font-mono outline-none"
+                            placeholder="Belum ada data">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Divider -->
+            <hr class="border-slate-100">
+
+            <!-- Section 2: Form Input & Simpan -->
+            <div class="space-y-4">
+                <div>
+                    <label for="location-name" class="block text-sm font-medium text-slate-700 mb-1">Nama / Catatan
+                        Lokasi</label>
+                    <input type="text" id="location-name"
+                        class="w-full border border-slate-300 rounded-lg py-2.5 px-3 text-sm text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all placeholder:text-slate-400"
+                        placeholder="Contoh: Titik Sampel A / Pohon Mahoni">
+                </div>
+
+                <button id="btn-save"
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition-all duration-200 active:scale-[0.98] shadow-md shadow-blue-500/30">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4">
+                        </path>
+                    </svg>
+                    Simpan Data Lokasi
+                </button>
+            </div>
+        </main>
+
+        <!-- Section 3: Daftar Data Tersimpan -->
+        <div class="mt-6 bg-white p-5 rounded-2xl shadow-lg">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-bold text-slate-800">Daftar Lokasi <span id="data-count"
+                        class="text-xs bg-blue-100 text-blue-700 py-0.5 px-2 rounded-full ml-1">0</span></h2>
+                <div class="flex gap-2">
+                    <button id="btn-export"
+                        class="flex items-center gap-1 text-xs bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-700 py-1.5 px-2.5 rounded-lg transition-colors"
+                        title="Export ke CSV">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                            </path>
+                        </svg>
+                        CSV
+                    </button>
+                    <button id="btn-clear-all"
+                        class="flex items-center gap-1 text-xs bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 py-1.5 px-2.5 rounded-lg transition-colors"
+                        title="Hapus Semua Data">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                            </path>
+                        </svg>
+                        Hapus
+                    </button>
+                </div>
+            </div>
+
+            <!-- List Container -->
+            <div id="data-list" class="space-y-3 max-h-80 overflow-y-auto pr-1">
+                <!-- Item di-render dari JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container"
+        class="fixed top-4 left-1/2 -translate-x-1/2 z-50 flex flex-col gap-2 pointer-events-none w-11/12 max-w-sm">
+    </div>
+
+    <!-- Custom Confirm Modal -->
+    <div id="confirm-modal"
+        class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+        <div
+            class="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl transform scale-95 transition-transform duration-300">
+            <div class="w-12 h-12 rounded-full bg-rose-100 flex items-center justify-center mb-4 text-rose-600">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+                    </path>
+                </svg>
+            </div>
+            <h3 class="text-lg font-bold text-slate-800 mb-2">Hapus Semua Data?</h3>
+            <p class="text-slate-500 text-sm mb-6">Tindakan ini tidak dapat dibatalkan. Semua data koordinat yang
+                tersimpan di perangkat ini akan hilang secara permanen.</p>
+            <div class="flex justify-end gap-3">
+                <button id="btn-modal-cancel"
+                    class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-medium rounded-xl transition">Batal</button>
+                <button id="btn-modal-confirm"
+                    class="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white text-sm font-medium rounded-xl transition">Ya,
+                    Hapus Semua</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Element References
+            const btnGetLocation = document.getElementById('btn-get-location');
+            const btnGetLocationText = document.getElementById('btn-get-location-text');
+            const latDisplay = document.getElementById('lat-display');
+            const lngDisplay = document.getElementById('lng-display');
+            const locationNameInput = document.getElementById('location-name');
+            const btnSave = document.getElementById('btn-save');
+            const btnExport = document.getElementById('btn-export');
+            const btnClearAll = document.getElementById('btn-clear-all');
+            const dataList = document.getElementById('data-list');
+            const dataCount = document.getElementById('data-count');
+
+            // Modal Elements
+            const confirmModal = document.getElementById('confirm-modal');
+            const btnModalCancel = document.getElementById('btn-modal-cancel');
+            const btnModalConfirm = document.getElementById('btn-modal-confirm');
+
+            // State
+            let currentLat = null;
+            let currentLng = null;
+            let savedData = JSON.parse(localStorage.getItem('geoCollectorData')) || [];
+
+            // UI: Custom Toast Notification
+            function showToast(message, type = 'info') {
+                const toastContainer = document.getElementById('toast-container');
+                const toast = document.createElement('div');
+
+                let bgClass = 'bg-slate-800';
+                let icon = '';
+
+                if (type === 'success') {
+                    bgClass = 'bg-emerald-600';
+                    icon = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>`;
+                } else if (type === 'error') {
+                    bgClass = 'bg-rose-600';
+                    icon = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>`;
+                }
+
+                toast.className = `${bgClass} text-white px-4 py-3 rounded-xl shadow-lg flex items-center gap-3 transform -translate-y-4 opacity-0 transition-all duration-300`;
+                toast.innerHTML = `${icon} <span class="text-sm font-medium">${message}</span>`;
+
+                toastContainer.appendChild(toast);
+
+                // Trigger animation
+                requestAnimationFrame(() => {
+                    toast.classList.remove('-translate-y-4', 'opacity-0');
+                });
+
+                // Remove after 3 seconds
+                setTimeout(() => {
+                    toast.classList.add('-translate-y-4', 'opacity-0');
+                    setTimeout(() => toast.remove(), 300);
+                }, 3000);
+            }
+
+            // Init Render
+            renderList();
+
+            // Function: Mengambil Geolocation
+            btnGetLocation.addEventListener('click', () => {
+                if (!navigator.geolocation) {
+                    showToast('Browser Anda tidak mendukung fitur Geolocation.', 'error');
+                    return;
+                }
+
+                btnGetLocation.disabled = true;
+                btnGetLocation.classList.add('opacity-70', 'cursor-not-allowed');
+                btnGetLocationText.textContent = 'Mencari sinyal GPS...';
+
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        currentLat = position.coords.latitude;
+                        currentLng = position.coords.longitude;
+
+                        latDisplay.value = currentLat.toFixed(7);
+                        lngDisplay.value = currentLng.toFixed(7);
+
+                        showToast('Koordinat berhasil didapatkan!', 'success');
+                        resetLocationButton();
+                    },
+                    (error) => {
+                        let errorMsg = 'Gagal mengambil lokasi.';
+                        if (error.code === 1) errorMsg = 'Izin lokasi ditolak pengguna.';
+                        if (error.code === 2) errorMsg = 'Sinyal GPS tidak tersedia.';
+                        if (error.code === 3) errorMsg = 'Waktu permintaan lokasi habis (Timeout).';
+
+                        showToast(errorMsg, 'error');
+                        resetLocationButton();
+                    },
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 15000,
+                        maximumAge: 0
+                    }
+                );
+            });
+
+            function resetLocationButton() {
+                btnGetLocation.disabled = false;
+                btnGetLocation.classList.remove('opacity-70', 'cursor-not-allowed');
+                btnGetLocationText.textContent = 'Ambil Koordinat Saat Ini';
+            }
+
+            // Function: Menyimpan Data
+            btnSave.addEventListener('click', () => {
+                if (currentLat === null || currentLng === null) {
+                    showToast('Harap ambil koordinat terlebih dahulu!', 'error');
+                    return;
+                }
+
+                const nameVal = locationNameInput.value.trim();
+                const defaultName = `Titik ${savedData.length + 1}`;
+
+                const newData = {
+                    id: Date.now(),
+                    name: nameVal || defaultName,
+                    lat: currentLat,
+                    lng: currentLng,
+                    timestamp: new Date().toISOString()
+                };
+
+                savedData.push(newData);
+                saveToLocalStorage();
+                renderList();
+
+                // Reset Form
+                locationNameInput.value = '';
+                currentLat = null;
+                currentLng = null;
+                latDisplay.value = '';
+                lngDisplay.value = '';
+
+                showToast('Data lokasi berhasil disimpan!', 'success');
+            });
+
+            function saveToLocalStorage() {
+                localStorage.setItem('geoCollectorData', JSON.stringify(savedData));
+            }
+
+            // Function: Merender Daftar Data
+            function renderList() {
+                dataCount.textContent = savedData.length;
+                dataList.innerHTML = '';
+
+                if (savedData.length === 0) {
+                    dataList.innerHTML = `
+                        <div class="text-center py-8">
+                            <svg class="w-12 h-12 mx-auto text-slate-200 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                            <p class="text-sm text-slate-500 italic">Belum ada data tersimpan.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                // Reverse agar data terbaru di atas
+                [...savedData].reverse().forEach((item) => {
+                    const dateObj = new Date(item.timestamp);
+                    const formattedDate = dateObj.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
+                    const formattedTime = dateObj.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+
+                    const div = document.createElement('div');
+                    div.className = 'p-4 border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors flex justify-between items-start gap-2 bg-white';
+                    div.innerHTML = `
+                        <div class="overflow-hidden">
+                            <h3 class="font-semibold text-slate-800 text-sm truncate" title="${item.name}">${item.name}</h3>
+                            <div class="mt-1 flex items-center gap-1 text-xs text-slate-500 font-mono">
+                                <span class="bg-slate-100 px-1.5 py-0.5 rounded">${item.lat.toFixed(5)}</span>
+                                <span class="bg-slate-100 px-1.5 py-0.5 rounded">${item.lng.toFixed(5)}</span>
+                            </div>
+                            <div class="mt-1.5 text-[11px] text-slate-400 flex items-center gap-1">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                ${formattedDate} - ${formattedTime}
+                            </div>
+                        </div>
+                        <button onclick="deleteItem(${item.id})" class="text-rose-400 hover:text-rose-600 hover:bg-rose-50 p-2 rounded-lg transition-colors flex-shrink-0" title="Hapus">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                        </button>
+                    `;
+                    dataList.appendChild(div);
+                });
+            }
+
+            // Global function for inline onclick (menghapus satu item)
+            window.deleteItem = (id) => {
+                savedData = savedData.filter(item => item.id !== id);
+                saveToLocalStorage();
+                renderList();
+                showToast('1 item berhasil dihapus.', 'info');
+            };
+
+            // Function: Modal Hapus Semua
+            btnClearAll.addEventListener('click', () => {
+                if (savedData.length === 0) {
+                    showToast('Tidak ada data untuk dihapus.', 'info');
+                    return;
+                }
+
+                // Show modal
+                confirmModal.classList.remove('hidden');
+                // Timeout for smooth fade in
+                setTimeout(() => {
+                    confirmModal.classList.remove('opacity-0');
+                    confirmModal.querySelector('div').classList.remove('scale-95');
+                }, 10);
+            });
+
+            const closeModal = () => {
+                confirmModal.classList.add('opacity-0');
+                confirmModal.querySelector('div').classList.add('scale-95');
+                setTimeout(() => {
+                    confirmModal.classList.add('hidden');
+                }, 300);
+            };
+
+            btnModalCancel.addEventListener('click', closeModal);
+
+            btnModalConfirm.addEventListener('click', () => {
+                savedData = [];
+                saveToLocalStorage();
+                renderList();
+                closeModal();
+                showToast('Semua data berhasil dihapus!', 'success');
+            });
+
+            // Tutup modal jika klik area luar
+            confirmModal.addEventListener('click', (e) => {
+                if (e.target === confirmModal) closeModal();
+            });
+
+            // Function: Export ke CSV
+            btnExport.addEventListener('click', () => {
+                if (savedData.length === 0) {
+                    showToast('Belum ada data untuk di-export!', 'error');
+                    return;
+                }
+
+                // Header CSV
+                let csvContent = "Nama,Latitude,Longitude,Tanggal,Waktu\n";
+
+                // Isi Data CSV
+                savedData.forEach(item => {
+                    // Escape koma atau kutipan pada nama
+                    let namaAman = `"${item.name.replace(/"/g, '""')}"`;
+
+                    const d = new Date(item.timestamp);
+                    const tgl = d.toISOString().split('T')[0];
+                    const wkt = d.toTimeString().split(' ')[0];
+
+                    csvContent += `${namaAman},${item.lat},${item.lng},${tgl},${wkt}\n`;
+                });
+
+                // Buat file blob
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const url = URL.createObjectURL(blob);
+
+                // Buat tag <a> sementara untuk mengunduh
+                const link = document.createElement("a");
+                link.setAttribute("href", url);
+                link.setAttribute("download", `Geo_Data_${new Date().getTime()}.csv`);
+                link.style.visibility = 'hidden';
+
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+                showToast('File CSV berhasil diunduh.', 'success');
+            });
+        });
+    </script>
+</body>
+
+</html>
